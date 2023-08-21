@@ -1,5 +1,11 @@
 import http from "http";
 
+
+require("./app.ts");
+const { } = require("./db.ts");
+
+const port = process.env.PORT || 80;
+
 export const server = http.createServer((req, res) => {
   res.writeHead(200, { "Content-Type": "application/json" });
   res.end(
@@ -9,6 +15,6 @@ export const server = http.createServer((req, res) => {
   );
 });
 
-server.listen(3000, () => {
-  console.log("Server running on http://localhost:3000/")
+server.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}/`)
 })

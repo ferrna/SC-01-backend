@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc -p",
+    "start:dev": "npx nodemon"
   },
   "keywords": [],
   "author": "",
@@ -12,5 +14,13 @@
   "devDependencies": {
     "@types/node": "^20.5.1",
     "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.0.1"
   }
 }
