@@ -1,35 +1,49 @@
-require('dotenv').config();
-require('./db.ts');
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
-const cors = require('cors');
+import express from 'express';
+import * as bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import cors from 'cors';
+import BaseController from './controllers/baseController';
 
-const server = express();
+class App {
+  public app: express.Application;
+  public port: number;
+ 
+  constructor(controllers: BaseController[], port: number) {
+    this.app = express();
+    this.port = port;
+ 
+    this.initializeMiddlewares();
+    this.initializeControllers(controllers);
+  }
+ 
+  private initializeMiddlewares() {
+    this.app.use(bodyParser.json());
+    this.app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+    this.app.use(cookieParser());
+    this.app.use(morgan('dev'));
+    this.app.use(cors());
 
-server.use(express.urlencoded({ extended: true, limit: '50mb' }));
-server.use(express.json({ limit: '50mb' }));
-server.use(cookieParser());
-server.use(morgan('dev'));
-server.use((req: any, res: any, next: any) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  next();
-});
-
-const { router } = require('./routes/index.ts');
-// app.use('/api/v1/users', usersRouter);
-server.use('/', router);
-
-// Error catching endware.
-server.use((err: any, req: any, res: any, next: any) => {
-  // eslint-disable-line no-unused-vars
-  const status = err.status || 500;
-  const message = err.message || err;
-  console.error(err);
-  res.status(status).send(message);
-});
-
-module.exports = server;
+    this.app.use((error: any, request: express.Request, response: express.Response, next: express.NextFunction) => {
+        const status = error.status || 500;
+        const message = error.message || error;
+        console.error(error);
+        response.status(status).send(message);
+      });
+  }
+ 
+  private initializeControllers(controllers: BaseController[]) {
+    controllers.forEach((controller) => {
+      controller.initializeRoutes();
+      this.app.use('/', controller.router);
+    });
+  }
+ 
+  public listen() {
+    this.app.listen(this.port, () => {
+      console.log(`App listening on the port ${this.port}`);
+    });
+  }
+}
+ 
+export default App;
