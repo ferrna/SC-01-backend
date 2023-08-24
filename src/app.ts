@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
 import BaseController from './controllers/baseController';
+import { dbConfig } from './db';
 
 class App {
   public app: express.Application;
@@ -13,10 +14,17 @@ class App {
     this.app = express();
     this.port = port;
  
+    this.connectToTheDatabase();
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
   }
  
+  public listen() {
+    this.app.listen(this.port, () => {
+      console.log(`App listening on the port ${this.port}`);
+    });
+  }
+
   private initializeMiddlewares() {
     this.app.use(bodyParser.json());
     this.app.use(express.urlencoded({ extended: true, limit: '50mb' }));
@@ -39,10 +47,13 @@ class App {
     });
   }
  
-  public listen() {
-    this.app.listen(this.port, () => {
-      console.log(`App listening on the port ${this.port}`);
-    });
+  private connectToTheDatabase() {
+    dbConfig
+    /* .authenticate().then(() => logger.info("connected to db")) */
+    .authenticate().then(() => console.log("connected to db"))            
+    .catch(() => {            
+        throw "error";       
+     });    
   }
 }
  
