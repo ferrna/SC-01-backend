@@ -10,7 +10,7 @@ export const dbConfig = new sequelize.Sequelize(
     (process.env.DB_USER = "root"),
     (process.env.DB_PASSWORD = "1234"),
     {
-        port: Number(process.env.DB_PORT) || 54320,
+        port: Number(3306) || 54320,
         host: process.env.DB_HOST || "localhost",
         dialect: "mysql",
         pool: {

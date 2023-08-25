@@ -50,9 +50,9 @@ class App {
   private connectToTheDatabase() {
     dbConfig
     /* .authenticate().then(() => logger.info("connected to db")) */
-    .authenticate().then(() => console.log("connected to db"))            
-    .catch(() => {            
-        throw "error";       
+    .sync().then(() => console.log("connected to db"))            
+    .catch((error:any) => {            
+        console.log(error);       
      });    
   }
 }

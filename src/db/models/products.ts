@@ -3,7 +3,7 @@ import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 export interface ProductsAttributes {
     id: number;
     name: string;
-    components: string[] | null;
+    components: string | null;
     price: number | null;
     createdAt?: Date;
     updatedAt?: Date;
@@ -27,8 +27,16 @@ export function ProductsFactory (sequelize: Sequelize): ProductsStatic {
             allowNull: false
         },
         components: {
-            type: new DataTypes.ARRAY(DataTypes.STRING(128)),
-            allowNull: true
+            type: new DataTypes.STRING(128),
+            allowNull: true,
+            get() {
+              const stringValue = this.getDataValue('components');
+              return stringValue ? stringValue.split(',') : null;
+            },
+            set(value: string[] | null) {
+              const arrayValue = value ? value.join(',') : '';
+              this.setDataValue('components', arrayValue);
+            },
         },
         price: {
             type: new DataTypes.INTEGER(),
