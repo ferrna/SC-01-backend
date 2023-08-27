@@ -1,6 +1,7 @@
 import express from 'express';
 import Product from './product.interface';
 import BaseController from '../controllers/baseController';
+import { Products } from '../db';
  
 class ProductsController extends BaseController {
  
@@ -18,12 +19,17 @@ class ProductsController extends BaseController {
  
   
   public initializeRoutes(): void {
-    this.router.get('/products', this.getAllProducts);
-    this.router.post('/products', this.createAProducts);
+    this.router.get(this.path , this.getAllProducts);
+    this.router.post(this.path, this.createAProducts);
   }
-  public getAllProducts = (request: express.Request, response: express.Response) => {
-    /* response.send(this.products); */
-    response.send("It Works!");
+  public getAllProducts = async (request: express.Request, response: express.Response) => {
+  
+      try {
+        const allProducts = await Products.findAll();
+        response.send(allProducts);
+      } catch (error) {
+        console.log(error);
+      }
   }
  
   public createAProducts = (request: express.Request, response: express.Response) => {

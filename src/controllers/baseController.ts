@@ -1,6 +1,6 @@
 import express from 'express';
  
-abstract class BaseController {
+abstract class RouterHandler {
   public router: express.Router = express.Router();
  
   constructor() {
@@ -10,4 +10,4 @@ abstract class BaseController {
   }
 }
  
-export default BaseController;
+export default RouterHandler;
