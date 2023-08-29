@@ -2,6 +2,9 @@ import * as sequelize from "sequelize";
 import { ProductsFactory } from "./models/products";
 import { ArticlesFactory } from "./models/articles";
 
+/* Require environment variables */
+require("dotenv").config();
+
 export const dbConfig = new sequelize.Sequelize(
     /* (process.env.DB_NAME = "db-name"),
     (process.env.DB_USER = "db-user"),
@@ -10,8 +13,8 @@ export const dbConfig = new sequelize.Sequelize(
     (process.env.DB_USER = "root"),
     (process.env.DB_PASSWORD = "1234"),
     {
-        port: Number(3306) || 54320,
-        host: /* process.env.DB_HOST ||*/ "localhost",
+        port: Number(process.env.DB_PORT) || 5432,
+        host: process.env.DB_HOST || "localhost",
         dialect: "mysql",
         pool: {
             min: 0,
