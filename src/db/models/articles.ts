@@ -1,7 +1,7 @@
 import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 
 export interface ArticlesAttributes {
-    id: number;
+    id?: number;
     title: string;
     content: string | null;
     author: string | null;
