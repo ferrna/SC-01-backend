@@ -1,18 +1,18 @@
-import Article from './article.interface'
+import Product from './product.interface'
 
-function isAnArticle(obj: any): obj is Article {
-  return 'title' in obj && 'body' in obj
+function isAProduct(obj: any): obj is Product {
+  return 'name' in obj && 'description' in obj
 }
 
 const validateData = (method: string, data: any): boolean => {
   switch (method) {
-    case 'createAnArticle':
-      if (isAnArticle(data)) {
+    case 'createAProduct':
+      if (isAProduct(data)) {
         return true
       }
       return false
-    case 'editArticle':
-      if ('id' in data && isAnArticle(data)) {
+    case 'editProduct':
+      if ('id' in data && isAProduct(data)) {
         return true
       }
       return false

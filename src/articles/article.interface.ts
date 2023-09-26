@@ -1,9 +1,14 @@
 interface Article {
-    title: string;
-    content: string | null;
-    author?: string | null;
-    createdAt?: Date;
-    updatedAt?: Date;
-  }
-   
-  export default Article;
+  id?: number
+  title: string
+  drophead: string
+  author: string
+  date: Date
+  // image1?: string
+  // image2?: string
+  introduction?: string
+  body: string
+  body2?: string
+}
+
+export default Article
