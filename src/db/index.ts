@@ -37,12 +37,14 @@ export const GeneralDatas = GeneralDatasFactory(dbConfig)
 
 Products.belongsToMany(Articles, {
   through: 'products_articles',
-  as: 'articles',
-  foreignKey: 'product_id',
+  as: 'article',
+  foreignKey: 'productId',
+  otherKey: 'articleId',
 })
 
 Articles.belongsToMany(Products, {
   through: 'products_articles',
-  as: 'products',
-  foreignKey: 'article_id',
+  as: 'product',
+  foreignKey: 'articleId',
+  otherKey: 'productId',
 })

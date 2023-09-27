@@ -6,8 +6,8 @@ interface Product {
   date: Date
   // image1?: string
   // image2?: string
-  // categories?: string[]
-  // articles: number[]
+  categories?: string[]
+  articles?: number[]
 }
 
 export default Product

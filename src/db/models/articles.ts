@@ -3,8 +3,11 @@ import { BuildOptions, DataTypes, Model, Sequelize } from 'sequelize'
 export interface ArticlesAttributes {
   id?: number
   title: string
-  content: string | null
+  drophead: string
   author: string | null
+  introduction?: string | null
+  body: string | null
+  body2?: string | null
   createdAt?: Date
   updatedAt?: Date
 }
