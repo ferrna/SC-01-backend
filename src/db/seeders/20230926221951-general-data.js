@@ -7,7 +7,7 @@ const Op = Sequelize.Op;
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert(
-      "GeneralData",
+      "GeneralDatas",
       [
         {
           name: "Titulo-productos-homepage-bigscreen",

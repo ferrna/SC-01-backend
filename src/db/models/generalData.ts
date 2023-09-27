@@ -1,22 +1,21 @@
 import { BuildOptions, DataTypes, Model, Sequelize } from 'sequelize'
 
-export interface GeneralDataAttributes {
+export interface GeneralDatasAttributes {
   id?: number
-  title: string
-  content: string | null
-  author: string | null
+  name: string
+  content: string
   createdAt?: Date
   updatedAt?: Date
 }
-export interface GeneralDataModel extends Model<GeneralDataAttributes>, GeneralDataAttributes {}
-export class GeneralData extends Model<GeneralDataModel, GeneralDataAttributes> {}
+export interface GeneralDatasModel extends Model<GeneralDatasAttributes>, GeneralDatasAttributes {}
+export class GeneralDatas extends Model<GeneralDatasModel, GeneralDatasAttributes> {}
 
-export type GeneralDataStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): GeneralDataModel
+export type GeneralDatasStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): GeneralDatasModel
 }
 
-export function GeneralDatasFactory(sequelize: Sequelize): GeneralDataStatic {
-  return <GeneralDataStatic>sequelize.define('generalData', {
+export function GeneralDatasFactory(sequelize: Sequelize): GeneralDatasStatic {
+  return <GeneralDatasStatic>sequelize.define('generalDatas', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -28,7 +27,7 @@ export function GeneralDatasFactory(sequelize: Sequelize): GeneralDataStatic {
     },
     content: {
       type: new DataTypes.TEXT(),
-      allowNull: true,
+      allowNull: false,
     },
     createdAt: {
       type: DataTypes.DATE,

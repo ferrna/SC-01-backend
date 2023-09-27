@@ -1,7 +1,7 @@
 import express from 'express'
 import Product from './product.interface'
 import BaseController from '../controllers/baseController'
-import { Articles, Products } from '../db'
+import { Articles, Products, Categories } from '../db'
 import validateData from './validators'
 
 class ProductsController extends BaseController {
@@ -37,17 +37,18 @@ class ProductsController extends BaseController {
     if (this.validateData('createAProduct', request.body)) {
       const product: Product = request.body
 
-      // TODO: relate new product with categories
-      let categories: string[] = []
-      if (product.categories) {
-        categories = [...product.categories]
-        delete product['categories']
-      }
-
       // @ts-ignore
       // sequelize already handles refactor of string[] components for string type storage
       const productCreated = await Products.create(product)
       console.log(productCreated)
+
+      if (product.categories) {
+        product.categories.forEach(async (category) => {
+          const categoryById = await Categories.findByPk(category.id)
+          // @ts-ignore
+          categoryById && productCreated.addCategory(categoryById)
+        })
+      }
 
       if (product.articles) {
         product.articles.forEach(async (articleId: number) => {

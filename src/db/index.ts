@@ -2,6 +2,7 @@ import * as sequelize from 'sequelize'
 import { ProductsFactory } from './models/products'
 import { ArticlesFactory } from './models/articles'
 import { GeneralDatasFactory } from './models/generalData'
+import { CategoriesFactory } from './models/categories'
 
 /* Require environment variables */
 require('dotenv').config()
@@ -32,6 +33,7 @@ export const dbConfig = new sequelize.Sequelize(
 export const Products = ProductsFactory(dbConfig)
 export const Articles = ArticlesFactory(dbConfig)
 export const GeneralDatas = GeneralDatasFactory(dbConfig)
+export const Categories = CategoriesFactory(dbConfig)
 
 // RELATIONS
 
@@ -46,5 +48,19 @@ Articles.belongsToMany(Products, {
   through: 'products_articles',
   as: 'product',
   foreignKey: 'articleId',
+  otherKey: 'productId',
+})
+
+Products.belongsToMany(Categories, {
+  through: 'products_categories',
+  as: 'category',
+  foreignKey: 'productId',
+  otherKey: 'categoryId',
+})
+
+Categories.belongsToMany(Products, {
+  through: 'products_categories',
+  as: 'product',
+  foreignKey: 'categoryId',
   otherKey: 'productId',
 })

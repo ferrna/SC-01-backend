@@ -6,7 +6,7 @@ interface Product {
   date: Date
   // image1?: string
   // image2?: string
-  categories?: string[]
+  categories?: { name: string; id: number }[]
   articles?: number[]
 }
 
