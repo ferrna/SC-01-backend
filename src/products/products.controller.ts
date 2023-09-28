@@ -38,7 +38,7 @@ class ProductsController extends BaseController {
       const product: Product = request.body
 
       // @ts-ignore
-      // sequelize already handles refactor of string[] components for string type storage
+      // sequelize already handles refactor of string[] 'components' field for string type storage
       const productCreated = await Products.create(product)
       console.log(productCreated)
 

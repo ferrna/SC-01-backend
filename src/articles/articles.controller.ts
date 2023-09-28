@@ -12,6 +12,7 @@ class ArticlesController extends BaseController {
   public initializeRoutes(): void {
     this.router.get(this.path, this.getAllArticles)
     this.router.post(this.path, this.createAnArticle)
+    this.router.put(this.path, this.editArticle)
   }
   public getAllArticles = async (request: express.Request, response: express.Response) => {
     try {
