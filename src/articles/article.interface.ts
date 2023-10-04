@@ -2,13 +2,14 @@ interface Article {
   id?: number
   title: string
   drophead: string
-  author: string
-  date: Date
-  // image1?: string
-  // image2?: string
+  author?: string
   introduction?: string
   body: string
   body2?: string
+  image?: any
+  // image2?: string
+  // createdAt?: Date
+  products?: number[]
 }
 
 export default Article

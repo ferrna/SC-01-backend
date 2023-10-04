@@ -6,11 +6,12 @@ import validateData from './validators'
 
 import fs from 'fs'
 import multer from 'multer'
-import S3Controller from '../s3/s3.controller'
+import S3Controller from '../s3/s3.service'
 const upload = multer({ dest: 'uploads/' })
 interface MulterRequest extends express.Request {
   file: any
 }
+
 class ProductsController extends BaseController {
   constructor(public router: express.Router = express.Router(), public path: string = '/products') {
     super()
@@ -19,7 +20,11 @@ class ProductsController extends BaseController {
   public initializeRoutes(): void {
     this.router.get(this.path, this.getAllProducts)
     this.router.post(this.path, upload.single('image'), this.createAProduct)
+    this.router.put(this.path, this.editProduct)
   }
+
+  public validateData = validateData
+
   public getAllProducts = async (request: express.Request, response: express.Response) => {
     try {
       const allProducts = await Products.findAll()
@@ -28,9 +33,6 @@ class ProductsController extends BaseController {
       console.log(error)
     }
   }
-
-  public validateData = validateData
-  /*  */
 
   public createAProduct = async (request: express.Request, response: express.Response) => {
     if (this.validateData('createAProduct', request.body)) {
@@ -77,8 +79,25 @@ class ProductsController extends BaseController {
         })
       }
 
-      // + id
-      response.send('Product created')
+      response.send({ message: 'Product created', productId: productCreated.id })
+    } else {
+      response.send('Data not valid')
+    }
+  }
+
+  public editProduct = async (request: express.Request, response: express.Response) => {
+    if (this.validateData('editProduct', request.body)) {
+      let product: object | null = await Products.findByPk(request.body.id)
+      if (product) {
+        /* product.set({
+          firstName: "Sarah",
+          lastName: "Jackson",
+        });
+
+        product = await product.save(); */
+        await Products.upsert(request.body)
+        response.send('Product updated')
+      }
     } else {
       response.send('Data not valid')
     }

@@ -54,6 +54,7 @@ class S3Controller extends BaseController {
       response.send({ message: error.message })
     }
   }
+
   public uploadImageToBucket2 = async (file: any) => {
     try {
       const result = await uploadFile(file)

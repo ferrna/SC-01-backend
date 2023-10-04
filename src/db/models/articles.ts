@@ -4,10 +4,11 @@ export interface ArticlesAttributes {
   id?: number
   title: string
   drophead: string
-  author: string | null
+  author?: string | null
   introduction?: string | null
   body: string | null
   body2?: string | null
+  image?: string | null
   createdAt?: Date
   updatedAt?: Date
 }
