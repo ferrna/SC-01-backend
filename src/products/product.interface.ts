@@ -4,7 +4,7 @@ interface Product {
   description: string
   components?: string[]
   date: Date
-  // image1?: string
+  image: any
   // image2?: string
   categories?: { name: string; id: number }[]
   articles?: number[]

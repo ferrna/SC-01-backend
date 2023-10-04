@@ -1,6 +1,7 @@
 import Product from './product.interface'
 
 function isAProduct(obj: any): obj is Product {
+  console.log(obj)
   return 'name' in obj && 'description' in obj
 }
 

@@ -4,22 +4,21 @@ import BaseController from '../controllers/baseController'
 import { Articles, Products, Categories } from '../db'
 import validateData from './validators'
 
+import fs from 'fs'
+import multer from 'multer'
+import S3Controller from '../s3/s3.controller'
+const upload = multer({ dest: 'uploads/' })
+interface MulterRequest extends express.Request {
+  file: any
+}
 class ProductsController extends BaseController {
-  /* private products: Product[] = [
-    {
-      author: 'Marcin',
-      content: 'Dolor sit amet',
-      title: 'Lorem Ipsum',
-    }
-  ]; */
-
   constructor(public router: express.Router = express.Router(), public path: string = '/products') {
     super()
   }
 
   public initializeRoutes(): void {
     this.router.get(this.path, this.getAllProducts)
-    this.router.post(this.path, this.createAProduct)
+    this.router.post(this.path, upload.single('image'), this.createAProduct)
   }
   public getAllProducts = async (request: express.Request, response: express.Response) => {
     try {
@@ -41,6 +40,26 @@ class ProductsController extends BaseController {
       // sequelize already handles refactor of string[] 'components' field for string type storage
       const productCreated = await Products.create(product)
       console.log(productCreated)
+
+      // upload file image
+      const file = (request as MulterRequest).file
+      console.log(file)
+      if (file) {
+        const s3Instance = new S3Controller()
+        const { response = null } = { response: await s3Instance.uploadImageToBucket2(file) }
+        console.log(response?.location)
+        if (response?.location) {
+          productCreated.image = response.location
+          await productCreated.save()
+        }
+        // error: ENOENT: no such file or directory, unlink 'public/uploads/1f2b7f0b7f0b7f0b7f0b7f0b7f0b7f0b'
+        // path still exists and file gets deleted
+        fs.unlink('public' + file.path, function (err) {
+          if (err) console.log(err)
+
+          console.log('File deleted!')
+        })
+      }
 
       if (product.categories) {
         product.categories.forEach(async (category) => {

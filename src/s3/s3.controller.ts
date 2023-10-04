@@ -35,18 +35,35 @@ class S3Controller extends BaseController {
   }
 
   public uploadImageToBucket = async (request: express.Request, response: express.Response) => {
-    //  post '/images'
-    const file = (request as MulterRequest).file
-    console.log(file)
+    try {
+      //  post '/images'
+      const file = (request as MulterRequest).file
+      console.log(file)
 
-    // apply filter
-    // resize
+      // apply filter
+      // resize
 
-    const result = await uploadFile(file)
-    await unlinkFile(file.path)
-    console.log(result)
+      const result = await uploadFile(file)
+      await unlinkFile(file.path)
+      console.log(result)
 
-    response.send({ imagePath: `/images/${result.Key}` })
+      response.send({ location: `${result.Location}` })
+      //response.send({ imagePath: `/images/${result.Key}` })
+    } catch (error: any) {
+      console.log(error)
+      response.send({ message: error.message })
+    }
+  }
+  public uploadImageToBucket2 = async (file: any) => {
+    try {
+      const result = await uploadFile(file)
+      await unlinkFile(file.path)
+      console.log(result)
+
+      return { location: `${result.Location}` }
+    } catch (error: any) {
+      console.log(error)
+    }
   }
 }
 
