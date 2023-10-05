@@ -1,4 +1,4 @@
-interface Product {
+export interface Product {
   id?: number
   name: string
   description: string
@@ -10,4 +10,9 @@ interface Product {
   articles?: number[]
 }
 
-export default Product
+export interface ProductRequestBody {
+  name: string
+  description: string
+  components?: string
+  price?: number
+}

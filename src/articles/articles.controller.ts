@@ -21,6 +21,7 @@ class ArticlesController extends BaseController {
     this.router.get(this.path, this.getAllArticles)
     this.router.post(this.path, upload.single('image'), this.createAnArticle)
     this.router.put(this.path + '/:key', this.editArticle)
+    this.router.get(this.path + '/:key', this.getArticle)
   }
 
   public validateData = validateData
@@ -78,35 +79,44 @@ class ArticlesController extends BaseController {
     if (this.validateData('editArticle', request.body)) {
       let articleId = request.params.key
 
-      let { article = null } = { article: await Articles.findByPk(articleId) }
+      let article = await Articles.findByPk(articleId)
+
       let articleRequestBody: ArticleRequestBody = request.body
       if (article !== null) {
-        Object.keys(articleRequestBody).forEach((key) => {
-          // Check if 'key' exists in 'article' before updating
-          //console.log(article.title, article[key as keyof typeof article])
-          //console.log(article.title, article[key as keyof typeof articleRequestBody])
+        console.log('here!')
+        /* Object.keys(articleRequestBody).forEach((key) => {
+          // article = { ...article, [key]: request.body[key] }
+          // Check if 'key' exists in 'article' before updating it
           //@ts-ignore
-          if (article.hasOwnProperty(key)) {
+          if(article.hasOwnProperty(key)){
             //@ts-ignore
-            article = { ...article, [key]: request.body[key] }
-            //article[key as keyof typeof articleRequestBody] = request.body[key]
+            article[key as keyof typeof articleRequestBody] = request.body[key]
           }
+        }) */
+        article.set({
+          title: articleRequestBody.title,
+          drophead: articleRequestBody.drophead,
+          introduction: articleRequestBody.introduction,
+          body: articleRequestBody.body,
         })
-        /* article.title = articleRequestBody.title
-        article.drophead = articleRequestBody.drophead
-        article.introduction = articleRequestBody.introduction
-        article.body = articleRequestBody.body */
         await article.save()
-        /* article.set({
-          firstName: "Sarah",
-          lastName: "Jackson",
-        });
-        await article.save(); */
 
         response.send('Article updated')
+      } else {
+        response.send('Article not found')
       }
     } else {
       response.send('Data not valid')
+    }
+  }
+  public getArticle = async (request: express.Request, response: express.Response) => {
+    let articleId = request.params.key
+
+    let article = await Articles.findByPk(articleId)
+    if (article !== null) {
+      response.send({ article })
+    } else {
+      response.send('Article not found')
     }
   }
 }

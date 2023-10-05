@@ -1,5 +1,5 @@
 import express from 'express'
-import Product from './product.interface'
+import { Product, ProductRequestBody } from './products.interfaces'
 import BaseController from '../controllers/baseController'
 import { Articles, Products, Categories } from '../db'
 import validateData from './validators'
@@ -20,7 +20,8 @@ class ProductsController extends BaseController {
   public initializeRoutes(): void {
     this.router.get(this.path, this.getAllProducts)
     this.router.post(this.path, upload.single('image'), this.createAProduct)
-    this.router.put(this.path, this.editProduct)
+    this.router.put(this.path + '/:key', this.editProduct)
+    this.router.get(this.path + '/:key', this.getProduct)
   }
 
   public validateData = validateData
@@ -37,7 +38,6 @@ class ProductsController extends BaseController {
   public createAProduct = async (request: express.Request, response: express.Response) => {
     if (this.validateData('createAProduct', request.body)) {
       const product: Product = request.body
-
       // @ts-ignore
       // sequelize already handles refactor of string[] 'components' field for string type storage
       const productCreated = await Products.create(product)
@@ -62,7 +62,6 @@ class ProductsController extends BaseController {
           console.log('File deleted!')
         })
       }
-
       if (product.categories) {
         product.categories.forEach(async (category) => {
           const categoryById = await Categories.findByPk(category.id)
@@ -70,7 +69,6 @@ class ProductsController extends BaseController {
           categoryById && productCreated.addCategory(categoryById)
         })
       }
-
       if (product.articles) {
         product.articles.forEach(async (articleId: number) => {
           const article = await Articles.findByPk(articleId)
@@ -86,20 +84,50 @@ class ProductsController extends BaseController {
   }
 
   public editProduct = async (request: express.Request, response: express.Response) => {
+    console.log(request.body)
     if (this.validateData('editProduct', request.body)) {
-      let product: object | null = await Products.findByPk(request.body.id)
-      if (product) {
-        /* product.set({
-          firstName: "Sarah",
-          lastName: "Jackson",
-        });
+      let productId = request.params.key
 
-        product = await product.save(); */
-        await Products.upsert(request.body)
+      let product = await Products.findByPk(productId)
+
+      let productRequestBody: ProductRequestBody = request.body
+      console.log(productRequestBody.components + 'components')
+      if (product !== null) {
+        console.log('here!')
+        /* Object.keys(articleRequestBody).forEach((key) => {
+          // article = { ...article, [key]: request.body[key] }
+          // Check if 'key' exists in 'article' before updating it
+          //@ts-ignore
+          if(article.hasOwnProperty(key)){
+            //@ts-ignore
+            article[key as keyof typeof articleRequestBody] = request.body[key]
+          }
+        }) */
+        console.log(productRequestBody.components)
+        product.set({
+          name: productRequestBody.name,
+          description: productRequestBody.description,
+          components: productRequestBody.components || null,
+          price: productRequestBody.price || null,
+        })
+        await product.save()
+
         response.send('Product updated')
+      } else {
+        response.send('Product not found')
       }
     } else {
       response.send('Data not valid')
+    }
+  }
+  public getProduct = async (request: express.Request, response: express.Response) => {
+    let productId = request.params.key
+
+    let product = await Products.findByPk(productId)
+    if (product !== null) {
+      response.send({ product })
+    } else {
+      response.send('Product not found')
     }
   }
 }

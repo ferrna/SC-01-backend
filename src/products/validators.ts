@@ -1,7 +1,6 @@
-import Product from './product.interface'
+import { Product } from './products.interfaces'
 
 function isAProduct(obj: any): obj is Product {
-  console.log(obj)
   return 'name' in obj && 'description' in obj
 }
 
@@ -13,7 +12,8 @@ const validateData = (method: string, data: any): boolean => {
       }
       return false
     case 'editProduct':
-      if ('id' in data && isAProduct(data)) {
+      //if ('id' in data && isAProduct(data)) {
+      if (isAProduct(data)) {
         return true
       }
       return false
