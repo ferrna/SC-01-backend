@@ -1,4 +1,4 @@
-import Article from './article.interface'
+import { Article } from './articles.interfaces'
 
 function isAnArticle(obj: any): obj is Article {
   return 'title' in obj && 'body' in obj
@@ -12,7 +12,7 @@ const validateData = (method: string, data: any): boolean => {
       }
       return false
     case 'editArticle':
-      if ('id' in data && isAnArticle(data)) {
+      if (isAnArticle(data)) {
         return true
       }
       return false

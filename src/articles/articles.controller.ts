@@ -1,5 +1,5 @@
 import express from 'express'
-import Article from './article.interface'
+import { Article, ArticleRequestBody } from './articles.interfaces'
 import BaseController from '../controllers/baseController'
 import { Articles, Products } from '../db'
 import validateData from './validators'
@@ -20,7 +20,7 @@ class ArticlesController extends BaseController {
   public initializeRoutes(): void {
     this.router.get(this.path, this.getAllArticles)
     this.router.post(this.path, upload.single('image'), this.createAnArticle)
-    this.router.put(this.path, this.editArticle)
+    this.router.put(this.path + '/:key', this.editArticle)
   }
 
   public validateData = validateData
@@ -74,16 +74,35 @@ class ArticlesController extends BaseController {
     }
   }
   public editArticle = async (request: express.Request, response: express.Response) => {
+    console.log(request.body)
     if (this.validateData('editArticle', request.body)) {
-      let article: object | null = await Articles.findByPk(request.body.id)
-      if (article) {
+      let articleId = request.params.key
+
+      let { article = null } = { article: await Articles.findByPk(articleId) }
+      let articleRequestBody: ArticleRequestBody = request.body
+      if (article !== null) {
+        Object.keys(articleRequestBody).forEach((key) => {
+          // Check if 'key' exists in 'article' before updating
+          //console.log(article.title, article[key as keyof typeof article])
+          //console.log(article.title, article[key as keyof typeof articleRequestBody])
+          //@ts-ignore
+          if (article.hasOwnProperty(key)) {
+            //@ts-ignore
+            article = { ...article, [key]: request.body[key] }
+            //article[key as keyof typeof articleRequestBody] = request.body[key]
+          }
+        })
+        /* article.title = articleRequestBody.title
+        article.drophead = articleRequestBody.drophead
+        article.introduction = articleRequestBody.introduction
+        article.body = articleRequestBody.body */
+        await article.save()
         /* article.set({
           firstName: "Sarah",
           lastName: "Jackson",
         });
+        await article.save(); */
 
-        article = await article.save(); */
-        await Articles.upsert(request.body)
         response.send('Article updated')
       }
     } else {

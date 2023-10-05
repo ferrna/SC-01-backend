@@ -1,8 +1,8 @@
-interface Article {
+export interface Article {
   id?: number
   title: string
   drophead: string
-  author?: string
+  author: string
   introduction?: string
   body: string
   body2?: string
@@ -12,4 +12,9 @@ interface Article {
   products?: number[]
 }
 
-export default Article
+export interface ArticleRequestBody {
+  title: string
+  body: string
+  introduction: string
+  drophead: string
+}
