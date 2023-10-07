@@ -20,8 +20,9 @@ class ArticlesController extends BaseController {
   public initializeRoutes(): void {
     this.router.get(this.path, this.getAllArticles)
     this.router.post(this.path, upload.single('image'), this.createAnArticle)
-    this.router.put(this.path + '/:key', this.editArticle)
+    this.router.put(this.path + '/:key', upload.single('image'), this.editArticle)
     this.router.get(this.path + '/:key', this.getArticle)
+    this.router.delete(this.path + '/:key', this.deleteArticle)
   }
 
   public validateData = validateData
@@ -85,7 +86,6 @@ class ArticlesController extends BaseController {
       if (article !== null) {
         console.log('here!')
         /* Object.keys(articleRequestBody).forEach((key) => {
-          // article = { ...article, [key]: request.body[key] }
           // Check if 'key' exists in 'article' before updating it
           //@ts-ignore
           if(article.hasOwnProperty(key)){
@@ -93,6 +93,28 @@ class ArticlesController extends BaseController {
             article[key as keyof typeof articleRequestBody] = request.body[key]
           }
         }) */
+
+        // upload file image
+        const file = (request as MulterRequest).file
+        console.log(file)
+        if (file) {
+          const s3Instance = new S3Controller()
+          const { response = null } = { response: await s3Instance.uploadImageToBucket2(file) }
+          console.log(response?.location)
+          if (response?.location) {
+            await article.update({ image: response.location })
+            // article.image = response.location
+            // //await article.save()
+          }
+          // error: ENOENT: no such file or directory, unlink 'public/uploads/1f2b7f0b7f0b7f0b7f0b7f0b7f0b7f0b'
+          // path still exists and file gets deleted
+          fs.unlink('public' + file.path, function (err) {
+            if (err) console.log(err)
+
+            console.log('File deleted!')
+          })
+        }
+
         article.set({
           title: articleRequestBody.title,
           drophead: articleRequestBody.drophead,
@@ -115,6 +137,17 @@ class ArticlesController extends BaseController {
     let article = await Articles.findByPk(articleId)
     if (article !== null) {
       response.send({ article })
+    } else {
+      response.send('Article not found')
+    }
+  }
+  public deleteArticle = async (request: express.Request, response: express.Response) => {
+    let articleId = request.params.key
+
+    let article = await Articles.findByPk(articleId)
+    if (article !== null) {
+      let deleted = await article.destroy()
+      response.send({ message: 'Article deleted', deleted })
     } else {
       response.send('Article not found')
     }
