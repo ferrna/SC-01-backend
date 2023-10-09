@@ -42,8 +42,17 @@ export function ProductsFactory(sequelize: Sequelize): ProductsStatic {
       // Sequelize calls the setter automatically, before even sending data to the database.
       // The only data the database ever sees is the already modified value.
       set(value: string[] | null) {
-        const arrayValue = value ? value.join(',') : ''
-        this.setDataValue('components', arrayValue)
+        //const arrayValue = value ? value.join(',') : ''
+        //this.setDataValue('components', arrayValue)
+        //Issue: on request, data sometimes gets converted to string, sometimes not
+        if (typeof value === 'string') {
+          this.setDataValue('components', value)
+        } else if (typeof value === 'object') {
+          const arrayValue = value ? value.join(',') : ''
+          this.setDataValue('components', arrayValue)
+        } else {
+          this.setDataValue('components', null)
+        }
       },
     },
     image: {

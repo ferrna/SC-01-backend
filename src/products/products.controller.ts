@@ -20,7 +20,7 @@ class ProductsController extends BaseController {
   public initializeRoutes(): void {
     this.router.get(this.path, this.getAllProducts)
     this.router.post(this.path, upload.single('image'), this.createAProduct)
-    this.router.put(this.path + '/:key', this.editProduct)
+    this.router.put(this.path + '/:key', upload.single('image'), this.editProduct)
     this.router.get(this.path + '/:key', this.getProduct)
   }
 
@@ -41,15 +41,14 @@ class ProductsController extends BaseController {
       // @ts-ignore
       // sequelize already handles refactor of string[] 'components' field for string type storage
       const productCreated = await Products.create(product)
-      console.log(productCreated)
 
       // upload file image
       const file = (request as MulterRequest).file
-      console.log(file)
+
       if (file) {
         const s3Instance = new S3Controller()
         const { response = null } = { response: await s3Instance.uploadImageToBucket2(file) }
-        console.log(response?.location)
+
         if (response?.location) {
           productCreated.image = response.location
           await productCreated.save()
@@ -90,8 +89,9 @@ class ProductsController extends BaseController {
 
       let product = await Products.findByPk(productId)
 
-      let productRequestBody: ProductRequestBody = request.body
-      console.log(productRequestBody.components + 'components')
+      let productRequestBody: ProductRequestBody = {
+        ...request.body,
+      }
       if (product !== null) {
         console.log('here!')
         /* Object.keys(articleRequestBody).forEach((key) => {
@@ -103,7 +103,26 @@ class ProductsController extends BaseController {
             article[key as keyof typeof articleRequestBody] = request.body[key]
           }
         }) */
-        console.log(productRequestBody.components)
+        const file = (request as MulterRequest).file
+        console.log(file)
+        if (file) {
+          const s3Instance = new S3Controller()
+          const { response = null } = { response: await s3Instance.uploadImageToBucket2(file) }
+          console.log(response?.location)
+          if (response?.location) {
+            await product.update({ image: response.location })
+            // article.image = response.location
+            // //await article.save()
+          }
+          // error: ENOENT: no such file or directory, unlink 'public/uploads/1f2b7f0b7f0b7f0b7f0b7f0b7f0b7f0b'
+          // path still exists and file gets deleted
+          fs.unlink('public' + file.path, function (err) {
+            if (err) console.log(err)
+
+            console.log('File deleted!')
+          })
+        }
+
         product.set({
           name: productRequestBody.name,
           description: productRequestBody.description,
