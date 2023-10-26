@@ -4,7 +4,7 @@ import multer from 'multer'
 
 import { uploadFile, getFileStream } from './s3.helper.js'
 import express from 'express'
-import BaseController from '../controllers/baseController'
+import BaseController from '../../baseController'
 
 const unlinkFile = util.promisify(fs.unlink)
 const upload = multer({ dest: 'uploads/' })

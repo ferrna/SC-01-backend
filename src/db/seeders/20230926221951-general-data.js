@@ -12,35 +12,28 @@ module.exports = {
         {
           name: "Titulo-productos-homepage-bigscreen",
           content:
-            "Nuestros productos",
+            "Explorá nuestros productos",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           name: "Titulo-productos-homepage-mobile",
           content:
-            "Nuestros productos",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          name: "Subtitulo-banner-brand",
-          content:
-            "Tu lorem ipsum sit anmet",
+            "Explorá nuestros productos",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           name: "Descripcion-preparaciones-homepage",
           content:
-            "lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.Nullam id dolor id nibh ultricies vehicula ut id elit.",
+            "lorem ipsum dolor sit amet.",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           name: "Sobre-nosotros-descripcion",
           content:
-            "lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.Nullam id dolor id nibh ultricies vehicula ut id elit.",
+            "lorem ipsum dolor sit amet",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -53,6 +46,9 @@ module.exports = {
     return queryInterface.bulkDelete("GeneralDatas", {
       [Op.or]: [
         { name: "Titulo-productos-homepage-bigscreen" },
+        { name: "Titulo-productos-homepage-mobile" },
+        { name: "Descripcion-preparaciones-homepage" },
+        { name: "Sobre-nosotros-descripcion" },
       ],
     });
   },

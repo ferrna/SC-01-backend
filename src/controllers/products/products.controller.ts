@@ -1,12 +1,13 @@
 import express from 'express'
 import { Product, ProductRequestBody } from './products.interfaces'
-import BaseController from '../controllers/baseController'
-import { Articles, Products, Categories } from '../db'
+import BaseController from '../baseController'
+import { Articles, Products, Categories } from '../../db'
 import validateData from './validators'
 
 import fs from 'fs'
 import multer from 'multer'
-import S3Controller from '../s3/s3.service'
+import S3Controller from '../services/s3/s3.service'
+/* Handle files uploads in body */
 const upload = multer({ dest: 'uploads/' })
 interface MulterRequest extends express.Request {
   file: any

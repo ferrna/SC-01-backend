@@ -1,9 +1,10 @@
 const App = require('./app.ts').default
 
-const ProductsController = require('./products/products.controller').default
-const ArticlesController = require('./articles/articles.controller').default
-const CategoriesController = require('./categories/categories.controller').default
-const GeneralDatasController = require('./generalData/generalData.controller').default
+/* Require router-controllers */
+const ProductsController = require('./controllers/products/products.controller').default
+const ArticlesController = require('./controllers/articles/articles.controller').default
+const CategoriesController = require('./controllers/categories/categories.controller').default
+const GeneralDatasController = require('./controllers/generalData/generalData.controller').default
 
 /* Require environment variables */
 require('dotenv').config()
@@ -14,7 +15,6 @@ const app = new App(
     new ArticlesController(),
     new CategoriesController(),
     new GeneralDatasController(),
-    //{router: (request: express.Request, response: express.Response, next: express.NextFunction) => ('It Works!')}
   ],
   process.env.PORT || 5000
 )

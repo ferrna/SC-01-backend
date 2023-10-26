@@ -6,6 +6,22 @@ import cors from 'cors'
 import BaseController from './controllers/baseController'
 import { dbConfig } from './db'
 
+const session = require('express-session')
+var passport = require('passport')
+const mysqlStore = require('express-mysql-session')(session)
+
+const IN_PROD = process.env.NODE_ENV === 'production'
+const TWO_HOURS = 1000 * 60 * 60 * 2
+const options = {
+  connectionLimit: 10,
+  password: process.env.DB_PASSWORD,
+  user: process.env.DB_USER,
+  database: process.env.DB_NAME,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  createDatabaseTable: true,
+}
+const sessionStore = new mysqlStore(options)
 class App {
   public app: express.Application
   public port: number
@@ -31,6 +47,21 @@ class App {
     this.app.use(cookieParser())
     this.app.use(morgan('dev'))
     this.app.use(cors())
+
+    this.app.use(
+      session({
+        name: process.env.SESS_NAME,
+        resave: false,
+        saveUninitialized: false,
+        store: sessionStore,
+        secret: process.env.SESS_SECRET,
+        cookie: {
+          maxAge: TWO_HOURS,
+          sameSite: true,
+          secure: IN_PROD,
+        },
+      })
+    )
 
     this.app.use(
       (error: any, request: express.Request, response: express.Response, next: express.NextFunction) => {

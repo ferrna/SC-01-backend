@@ -10,27 +10,27 @@ module.exports = {
       "Categories",
       [
         {
-          name: "Piel",
+          name: "Cuidado de la piel",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          name: "Nutricional",
+          name: "Suplementación Nutricional",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          name: "Probiotico",
+          name: "Probioticos",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          name: "Vitaminas",
+          name: "Extractos naturales con propiedades medicinales",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          name: "Aminoacidos",
+          name: "Vitaminas y aminoacidos esencialess",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -42,11 +42,11 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete("Categories", {
       [Op.or]: [
-        { name: "Piel" },
-        { name: "Nutricional" },
-        { name: "Probiotico" },
-        { name: "Vitaminas" },
-        { name: "Aminoacidos" },
+        { name: "Cuidado de la piel" },
+        { name: "Suplementación Nutricional" },
+        { name: "Probioticos" },
+        { name: "Extractos naturales con propiedades medicinales" },
+        { name: "Vitaminas y aminoacidos esenciales" },
       ],
     });
   },

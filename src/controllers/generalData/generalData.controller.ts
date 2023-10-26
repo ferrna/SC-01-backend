@@ -1,17 +1,9 @@
 import express from 'express'
 import GeneralData from './generalData.interface'
-import BaseController from '../controllers/baseController'
-import { GeneralDatas } from '../db'
+import BaseController from '../baseController'
+import { GeneralDatas } from '../../db'
 
 class GeneralDatasController extends BaseController {
-  /* private products: Product[] = [
-    {
-      author: 'Marcin',
-      content: 'Dolor sit amet',
-      title: 'Lorem Ipsum',
-    }
-  ]; */
-
   constructor(public router: express.Router = express.Router(), public path: string = '/general-data') {
     super()
   }
@@ -29,11 +21,7 @@ class GeneralDatasController extends BaseController {
     }
   }
 
-  public createAGeneralData = (request: express.Request, response: express.Response) => {
-    /* const products: Product = request.body;
-    this.products.push(products);
-    response.send(products); */
-  }
+  public createAGeneralData = (request: express.Request, response: express.Response) => {}
 }
 
 export default GeneralDatasController
