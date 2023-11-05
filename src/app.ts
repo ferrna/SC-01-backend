@@ -6,34 +6,9 @@ import cors from 'cors'
 import BaseController from './controllers/baseController'
 import { dbConfig } from './db'
 
-const session = require('express-session')
-var passport = require('passport')
-const mysqlStore = require('express-mysql-session')(session)
-
-const IS_PROD = process.env.NODE_ENV === 'production'
-const ONE_DAY = 1000 * 60 * 60 * 24
-
-/* 
-If needed pool for users authentification, but not needed for now, only for admin
-MySQL Pool for express-mysql-session:
-const mysql = require('mysql')
-const pool = mysql.createPool({
-  connectionLimit: 10,
-  password: process.env.DB_PASSWORD,
-  user: process.env.DB_USER,
-  database: process.env.MYSQL_DB,
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-}) */
-const sessionStore = new mysqlStore({
-  connectionLimit: 10,
-  password: process.env.DB_PASSWORD,
-  user: process.env.DB_USER,
-  database: process.env.MYSQL_DB,
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  createDatabaseTable: true,
-})
+import { sessionOptions } from './config/express-session.js'
+import session from 'express-session'
+import passport from 'passport'
 export class App {
   public app: express.Application
   public port: number | string
@@ -62,21 +37,8 @@ export class App {
     this.app.use(cors())
 
     /* -------------- SESSION ---------------- */
-    this.app.use(
-      session({
-        name: process.env.SESS_NAME,
-        resave: false,
-        saveUninitialized: false,
-        store: sessionStore,
-        secret: process.env.SESS_SECRET,
-        cookie: {
-          httponly: true,
-          maxAge: ONE_DAY,
-          sameSite: true,
-          secure: IS_PROD,
-        },
-      })
-    )
+    this.app.use(session(sessionOptions))
+
     /* -------------- PASSPORT AUTHENTICATION ---------------- */
     require('./config/passport')
     this.app.use(passport.initialize())

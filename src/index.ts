@@ -1,6 +1,6 @@
 import { App } from './app.ts'
 
-/* Import router-controllers */
+/* Import routerControllers */
 import { ProductsController } from './controllers/products/products.controller'
 import { ArticlesController } from './controllers/articles/articles.controller'
 import { CategoriesController } from './controllers/categories/categories.controller'

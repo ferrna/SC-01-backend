@@ -16,7 +16,6 @@ export class AuthenticationController extends BaseController {
   public login = async (request: express.Request, response: express.Response, next: express.NextFunction) => {
     passport.authenticate('local', (error: any, user: any) => {
       if (error) throw new Error(error.message)
-      console.log(user)
       if (!user) {
         response.status(401).send({ msg: 'User not finded' })
       } else {
