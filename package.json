@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tsc -p",
+    "build": "npx tsc -p .",
     "start:dev": "npx nodemon",
     "seeders": "cd src/db/ && npx sequelize-cli db:seed:all"
   },
@@ -20,6 +20,7 @@
     "@types/morgan": "^1.9.5",
     "@types/multer": "^1.4.8",
     "@types/node": "^20.5.1",
+    "@types/passport": "^1.0.14",
     "sequelize-cli": "^6.6.1",
     "typescript": "^5.1.6"
   },
@@ -27,6 +28,7 @@
     "aws-sdk": "^2.1468.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-mysql-session": "^3.0.0",
@@ -36,6 +38,7 @@
     "mysql2": "^3.6.0",
     "nodemon": "^3.0.1",
     "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
     "sequelize": "^6.32.1"
   }
 }

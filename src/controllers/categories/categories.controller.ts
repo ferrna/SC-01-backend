@@ -3,7 +3,7 @@ import Category from './category.interface'
 import BaseController from '../baseController'
 import { Categories } from '../../db'
 
-class CategoriesController extends BaseController {
+export class CategoriesController extends BaseController {
   constructor(public router: express.Router = express.Router(), public path: string = '/categories') {
     super()
   }
@@ -47,4 +47,3 @@ class CategoriesController extends BaseController {
     }
   }
 }
-export default CategoriesController

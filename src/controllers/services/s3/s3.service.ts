@@ -13,7 +13,7 @@ interface MulterRequest extends express.Request {
   file: any
 }
 
-class S3Controller extends BaseController {
+export class S3Controller extends BaseController {
   constructor(public router: express.Router = express.Router(), public path: string = '/images') {
     super()
   }
@@ -67,5 +67,3 @@ class S3Controller extends BaseController {
     }
   }
 }
-
-export default S3Controller

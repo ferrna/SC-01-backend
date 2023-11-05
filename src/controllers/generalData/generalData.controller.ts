@@ -3,7 +3,7 @@ import GeneralData from './generalData.interface'
 import BaseController from '../baseController'
 import { GeneralDatas } from '../../db'
 
-class GeneralDatasController extends BaseController {
+export class GeneralDatasController extends BaseController {
   constructor(public router: express.Router = express.Router(), public path: string = '/general-data') {
     super()
   }
@@ -23,5 +23,3 @@ class GeneralDatasController extends BaseController {
 
   public createAGeneralData = (request: express.Request, response: express.Response) => {}
 }
-
-export default GeneralDatasController

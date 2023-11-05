@@ -3,15 +3,16 @@ import { ProductsFactory } from './models/products'
 import { ArticlesFactory } from './models/articles'
 import { GeneralDatasFactory } from './models/generalData'
 import { CategoriesFactory } from './models/categories'
+import { UserFactory } from './models/user'
 
 /* Require environment variables */
 require('dotenv').config()
 
 export const dbConfig = new sequelize.Sequelize(
-  /* (process.env.DB_NAME = "db-name"),
+  /* (process.env.MYSQL_DB = "db-name"),
     (process.env.DB_USER = "db-user"),
     (process.env.DB_PASSWORD = "db-password"), */
-  (process.env.DB_NAME = 'sc'),
+  (process.env.MYSQL_DB = 'sc'),
   (process.env.DB_USER = 'root'),
   (process.env.DB_PASSWORD = '1234'),
   {
@@ -34,6 +35,7 @@ export const Products = ProductsFactory(dbConfig)
 export const Articles = ArticlesFactory(dbConfig)
 export const GeneralDatas = GeneralDatasFactory(dbConfig)
 export const Categories = CategoriesFactory(dbConfig)
+export const Users = UserFactory(dbConfig)
 
 // RELATIONS
 

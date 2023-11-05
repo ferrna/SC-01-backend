@@ -6,14 +6,14 @@ import validateData from './validators'
 
 import fs from 'fs'
 import multer from 'multer'
-import S3Controller from '../services/s3/s3.service'
+import { S3Controller } from '../services/s3/s3.service'
 /* Handle files uploads in body */
 const upload = multer({ dest: 'uploads/' })
 interface MulterRequest extends express.Request {
   file: any
 }
 
-class ProductsController extends BaseController {
+export class ProductsController extends BaseController {
   constructor(public router: express.Router = express.Router(), public path: string = '/products') {
     super()
   }
@@ -151,5 +151,3 @@ class ProductsController extends BaseController {
     }
   }
 }
-
-export default ProductsController
