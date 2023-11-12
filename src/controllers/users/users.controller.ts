@@ -10,23 +10,18 @@ export class UsersController extends BaseController {
   }
 
   public initializeRoutes(): void {
-    this.router.get(this.path, this.getUser)
+    this.router.get(this.path, this.getUserUsername)
     this.router.get(this.path + '/:key', isAdmin, this.getUserById)
-    this.router.get(this.path + '/admin', isAdmin, this.getUserIsAdmin)
-    this.router.put(this.path + '/admin/:key', isAdmin, this.putUserAdmin)
+    this.router.put(this.path + '/admin/:key', isAdmin, this.putNewAdminUser)
     this.router.post(this.path, this.createUser)
   }
 
-  public getUser = async (request: express.Request, response: express.Response) => {
+  public getUserUsername = async (request: express.Request, response: express.Response) => {
     try {
       response.send((request.user as any)?.dataValues.username)
     } catch (error) {
       response.status(401).send({ msg: 'No user authenticated' })
     }
-  }
-
-  public getUserIsAdmin = async (request: express.Request, response: express.Response) => {
-    response.send({ isAdmin: true })
   }
 
   public getUserById = async (request: express.Request, response: express.Response) => {
@@ -39,7 +34,7 @@ export class UsersController extends BaseController {
     }
   }
 
-  public putUserAdmin = async (request: express.Request, response: express.Response) => {
+  public putNewAdminUser = async (request: express.Request, response: express.Response) => {
     try {
       const user = await Users.findOne({ where: { id: request.params.key } })
       if (user === null) throw new Error()
@@ -52,16 +47,16 @@ export class UsersController extends BaseController {
   }
 
   public createUser = async (request: express.Request, response: express.Response) => {
-    console.log(request.body)
-    const saltHash = genPassword(request.body.password)
-    const salt = saltHash.salt
-    const hash = saltHash.hash
+    const { username, password } = request.body
     try {
-      const emailUser = await Users.findOne({ where: { username: request.body.username } })
-      if (emailUser !== null) throw new Error()
+      const saltHash = genPassword(password)
+      const salt = saltHash.salt
+      const hash = saltHash.hash
+      const dbUsername = await Users.findOne({ where: { username: username } })
+      if (dbUsername !== null) throw new Error("User already exists")
 
       const newUser = await Users.create({
-        username: request.body.username,
+        username: username,
         isAdmin: false,
         hash: hash,
         salt: salt,

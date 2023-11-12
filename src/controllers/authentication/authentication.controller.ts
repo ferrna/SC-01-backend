@@ -11,6 +11,11 @@ export class AuthenticationController extends BaseController {
   public initializeRoutes(): void {
     this.router.post(this.path + '/login', this.login)
     this.router.get(this.path + '/logout', this.logout)
+    this.router.get(this.path + '/admin-route', isAdmin, this.adminRoute)
+  }
+
+  public adminRoute = async (request: express.Request, response: express.Response) => {
+    response.send({ isAdmin: true })
   }
 
   public login = async (request: express.Request, response: express.Response, next: express.NextFunction) => {

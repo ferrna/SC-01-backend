@@ -34,7 +34,7 @@ export class App {
     this.app.use(express.urlencoded({ extended: true, limit: '50mb' }))
     this.app.use(cookieParser())
     this.app.use(morgan('dev'))
-    this.app.use(cors())
+    this.app.use(cors({ origin: 'http://localhost:3006' , credentials :  true}))
 
     /* -------------- SESSION ---------------- */
     this.app.use(session(sessionOptions))
